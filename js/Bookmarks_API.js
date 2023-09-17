@@ -4,7 +4,7 @@ function API_GetBookmarks() {
     return new Promise(resolve => {
         $.ajax({
             url: API_URL,
-            success: bookmarks => { resolve(bookmarks); },
+            success: bookmark => { resolve(bookmark); },
             error: (xhr) => { console.log(xhr); resolve(null); }
         });
     });
@@ -42,4 +42,14 @@ function API_DeleteBookmark(id) {
             error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
         });
     });
+}
+
+function API_GetBookmarkCat(cat) {
+    return new Promise(resolve => {
+        $.ajax({
+            url: API_URL + "/" + cat,
+            success: bookmark => { resolve(bookmark); },
+            error: (xhr) => { console.log(xhr); resolve(null); }
+        })
+    })
 }

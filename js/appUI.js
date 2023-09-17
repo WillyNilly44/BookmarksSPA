@@ -14,6 +14,9 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+    $('#catCmd').on("click", function () {
+        renderBookmark();
+    })
 }
 
 function renderAbout() {
@@ -128,7 +131,7 @@ async function renderDeleteBookmarkForm(id) {
         `);
         $('#deleteBookmark').on("click", async function () {
             showWaitingGif();
-            let result = await API_DeleteBookmark(id);
+            let result = await API_DeleteBookmark(bookmark.Id);
             if (result)
                 renderBookmarks();
             else
@@ -229,8 +232,10 @@ function renderBookmark(bookmark) {
      <div class="bookmarkRow" bookmark_id=${bookmark.Id}">
         <div class="bookmarkContainer noselect">
             <div class="bookmarkLayout">
-                <span class="bookmarkTitle">${bookmark.Title}</span>
-                <span class="bookmarkUrl">${bookmark.Url}</span>
+                <div style="display:'grid'">
+                <a href="${bookmark.Url}"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain=${bookmark.Url}"></a>
+                    <span class="bookmarkTitle">${bookmark.Title}</span>
+                </div>
                 <span class="bookmarkCat">${bookmark.Catégorie}</span>
             </div>
             <div class="bookmarkCommandPanel">
@@ -240,4 +245,31 @@ function renderBookmark(bookmark) {
         </div>
     </div>           
     `);
+}
+
+async function renderBookmarkCat(cat) {
+    showWaitingGif();
+    $("#actionTitle").text("Liste des bookmarks");
+    $("#createBookmark").show();
+    $("#abort").hide();
+    let catégorie = await API_GetBookmarkCat(cat);
+    eraseContent();
+    if (catégorie !== null) {
+        catégorie.forEach(bookmark => {
+            $("#content").append(renderBookmark(bookmark));
+        });
+        restoreContentScrollPosition();
+        // Attached click events on command icons
+        $(".editCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
+        });
+        $(".deleteCmd").on("click", function () {
+            saveContentScrollPosition();
+            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
+        });
+        $(".bookmarkRow").on("click", function (e) { e.preventDefault(); })
+    } else {
+        renderError("Service introuvable");
+    }
 }
