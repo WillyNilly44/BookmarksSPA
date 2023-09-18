@@ -189,22 +189,14 @@ function renderBookmarkForm(bookmark = null) {
     $("#abort").show();
     eraseContent();
     let create = bookmark == null;
-    let afficon=""
-    if(bookmark.Url == "")
-    {
-        afficon = ' <img src="images.png" class="appLogo" alt="" title="Gestionnaire de Bookmark">'
-    }
-    else
-    {
-        afficon= '<a href="${bookmark.Url}"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain=${bookmark.Url}"></a>';
-    }
+    
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
     $("#content").append(`
         <form class="form" id="bookmarkForm">
-            <a href="${bookmark.Url}"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain=${bookmark.Url}"></a>
+       <div class="iconDynamique"></div>
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-            ${afficon}
+            
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
@@ -243,6 +235,13 @@ function renderBookmarkForm(bookmark = null) {
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
         </form>
     `);
+    if (create) { 
+        $(".iconDynamique").append('<img src="images.png" class="appLogo" alt="" title="Gestionnaire de Bookmark"></img>');
+        console.log("yes")
+    }
+    else{
+        $(".iconDynamique").append('<a href="'+bookmark.Url+'"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain='+bookmark.Url+'"></a>');
+    }
     initFormValidation();
     $('#bookmarkForm').on("submit", async function (event) {
         event.preventDefault();
@@ -257,6 +256,16 @@ function renderBookmarkForm(bookmark = null) {
     });
     $('#cancel').on("click", function () {
         renderBookmarks();
+    });
+    $('#Url').on("change" , function(){
+        if($('#Url').attr('value') != '')
+        {
+           
+        }
+        else
+        {
+            $(".iconDynamique").append('<a href="'+bookmark.Url+'"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain='+bookmark.Url+'"></a>');
+        }
     });
 }
 
