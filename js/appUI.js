@@ -270,24 +270,12 @@ function renderBookmark(bookmark) {
     `);
 }
 
-function renderCategorie(item,isSelected) {
-    console.log(isSelected);
-    if(isSelected)
-    {
-        return $(`
-        <div class="dropdown-item cate"  cateid="${item}">
-        <i class="iconCheck fa-solid fa-check" idcheck="${item}"></i>
-        ${item}
-        </div>        
-        `); 
-    }
-    else{
-        return $(`
+function renderCategorie(item) {
+    return $(`
     <div class="dropdown-item cate"  cateid="${item}">
     ${item}
     </div>        
     `); 
-    }
     
    
 }
