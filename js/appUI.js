@@ -1,6 +1,7 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
-var select="YES";
+let selectedcat = '';
+let filterCat = '';
 Init_UI();
 
 function Init_UI() {
@@ -49,48 +50,57 @@ async function renderBookmarks() {
     showWaitingGif();
     $("#actionTitle").text("Liste des bookmarks");
     $("#createBookmark").show();
-    $("#Categories").empty();
     $("#abort").hide();
     let bookmarks = await API_GetBookmarks();
     let cats = [];
-    let selectedId = null;
+
     eraseContent();
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
-            $("#content").append(renderBookmark(bookmark));
-            if(!cats.includes(bookmark.Catégorie))
+            if(filterCat != ''&& bookmark.Catégorie == filterCat)
             {
-                cats.push(bookmark.Catégorie)
+                $("#content").append(renderBookmark(bookmark));
+            }
+            else if(filterCat == '')
+            {
+                $("#content").append(renderBookmark(bookmark))
+            }
+            ;
+            if (!cats.includes(bookmark.Catégorie)) {
+                cats.push(bookmark.Catégorie);
             }
         });
-        cats.forEach(item=>{
-            let isSelected = item == selectedId;
-            console.log(isSelected);
-            $("#Categories").append(renderCategorie(item,isSelected));
-        })
-        
-       
+        LoadCategories(cats, selectedcat);
+
         restoreContentScrollPosition();
         // Attached click events on command icons
         $(".editCmd").on("click", function () {
             saveContentScrollPosition();
             renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
         });
-        $("#ToutCmd").on("click", function (){
+        $("#ToutCmd").on("click", function () {
+            selectedcat = '';
             renderBookmarks();
         })
         $(".deleteCmd").on("click", function () {
             saveContentScrollPosition();
             renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
         });
-        $(".bookmarkRow").on("click", function (e) {})
-        $(".cate").on("click", function(){
-            const selectedId = $(this).attr("cateid");
-            console.log(selectedId);
+        $(".bookmarkRow").on("click", function (e) { })
+        $(".cate").on("click", function () {
+            selectedcat = $(this).attr("cateid");
+            filterCat = selectedcat
+            renderBookmarks();
         })
     } else {
         renderError("Service introuvable");
     }
+}
+function LoadCategories(cats, selectedcat) {
+    $("#Categories").empty();
+    cats.forEach(item => {
+        $("#Categories").append(renderCategorie(item, item == selectedcat));
+    })
 }
 function showWaitingGif() {
     $("#content").empty();
@@ -270,12 +280,12 @@ function renderBookmark(bookmark) {
     `);
 }
 
-function renderCategorie(item) {
+function renderCategorie(item, checked = false) {
+    let checkedattribute = checked ? 'fa-solid fa-check' : "fa-solid fa-fw";
     return $(`
     <div class="dropdown-item cate"  cateid="${item}">
+    <i class="${checkedattribute}"></i>
     ${item}
     </div>        
-    `); 
-    
-   
+    `);
 }
