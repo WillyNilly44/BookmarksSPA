@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 4fr 1fr;
     align-items: top;
-    background-color: rgb(87, 140, 255);
+    background-color: rgb(216, 216, 216);
     border-radius: 6px;
 }
 
@@ -33,11 +33,11 @@
 .bookmarkTitle {
     font-size: 1.1rem;
     font-weight: bold;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .bookmarkCat {
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .bookmarkCommandPanel {
