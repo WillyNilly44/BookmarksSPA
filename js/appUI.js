@@ -57,7 +57,7 @@ async function renderBookmarks() {
     eraseContent();
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
-            if(filterCat != ''&& bookmark.Catégorie == filterCat)
+            if(filterCat != ''&& bookmark.Catégorie == selectedcat)
             {
                 $("#content").append(renderBookmark(bookmark));
             }
@@ -89,7 +89,6 @@ async function renderBookmarks() {
         $(".bookmarkRow").on("click", function (e) { })
         $(".cate").on("click", function () {
             selectedcat = $(this).attr("cateid");
-            filterCat = selectedcat
             renderBookmarks();
         })
     } else {
@@ -190,12 +189,22 @@ function renderBookmarkForm(bookmark = null) {
     $("#abort").show();
     eraseContent();
     let create = bookmark == null;
+    let afficon=""
+    if(bookmark.Url == "")
+    {
+        afficon = ' <img src="images.png" class="appLogo" alt="" title="Gestionnaire de Bookmark">'
+    }
+    else
+    {
+        afficon= '<a href="${bookmark.Url}"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain=${bookmark.Url}"></a>';
+    }
     if (create) bookmark = newBookmark();
     $("#actionTitle").text(create ? "Création" : "Modification");
     $("#content").append(`
         <form class="form" id="bookmarkForm">
+            <a href="${bookmark.Url}"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain=${bookmark.Url}"></a>
             <input type="hidden" name="Id" value="${bookmark.Id}"/>
-
+            ${afficon}
             <label for="Title" class="form-label">Titre </label>
             <input 
                 class="form-control Alpha"
