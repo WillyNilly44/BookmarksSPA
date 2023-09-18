@@ -237,7 +237,6 @@ function renderBookmarkForm(bookmark = null) {
     `);
     if (create) { 
         $(".iconDynamique").append('<img src="images.png" class="appLogo" alt="" title="Gestionnaire de Bookmark"></img>');
-        console.log("yes")
     }
     else{
         $(".iconDynamique").append('<a href="'+bookmark.Url+'"><img class="bookmarkLogo" src="https://www.google.com/s2/favicons?sz=32&domain='+bookmark.Url+'"></a>');
