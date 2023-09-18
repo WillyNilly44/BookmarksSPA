@@ -51,7 +51,7 @@ async function renderBookmarks() {
     $("#actionTitle").text("Liste des bookmarks");
     $("#createBookmark").show();
     $("#abort").hide();
-    let bookmarks = await API_GetBookmarks();
+    let bookmarks = await Bookmarks_API.Get();
     let cats = [];
 
     eraseContent();
@@ -129,7 +129,7 @@ function renderCreateBookmarkForm() {
 }
 async function renderEditBookmarkForm(id) {
     showWaitingGif();
-    let bookmark = await API_GetBookmark(id);
+    let bookmark = await Bookmarks_API.Get(id);
     if (bookmark !== null)
         renderBookmarkForm(bookmark);
     else
@@ -140,7 +140,7 @@ async function renderDeleteBookmarkForm(id) {
     $("#createBookmark").hide();
     $("#abort").show();
     $("#actionTitle").text("Retrait");
-    let bookmark = await API_GetBookmark(id);
+    let bookmark = await Bookmarks_API.Get(id);
     eraseContent();
     if (bookmark !== null) {
         $("#content").append(`
@@ -163,7 +163,7 @@ async function renderDeleteBookmarkForm(id) {
         `);
         $('#deleteBookmark').on("click", async function () {
             showWaitingGif();
-            let result = await API_DeleteBookmark(bookmark.Id);
+            let result = await Bookmarks_API.Delete(bookmark.Id);
             if (result)
                 renderBookmarks();
             else
@@ -247,7 +247,7 @@ function renderBookmarkForm(bookmark = null) {
         let bookmark = getFormData($("#bookmarkForm"));
         bookmark.Id = parseInt(bookmark.Id);
         showWaitingGif();
-        let result = await API_SaveBookmark(bookmark, create);
+        let result = await Bookmarks_API.Save(bookmark, create);
         if (result)
             renderBookmarks();
         else

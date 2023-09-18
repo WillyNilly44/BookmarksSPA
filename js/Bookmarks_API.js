@@ -1,55 +1,34 @@
-const API_URL = "http://localhost:5000/api/bookmarks";
-
-function API_GetBookmarks() {
-    return new Promise(resolve => {
-        $.ajax({
-            url: API_URL,
-            success: bookmark => { resolve(bookmark); },
-            error: (xhr) => { console.log(xhr); resolve(null); }
+class Bookmarks_API {
+    static API_URL() { return "http://localhost:5000/api/bookmarks" };
+    static async Get(id = null) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL() + (id != null ? "/" + id : ""),
+                success: bookmarks => { resolve(bookmarks); },
+                error: (xhr) => { console.log(xhr); resolve(null); }
+            });
         });
-    });
-}
-
-function API_GetBookmark(bookmarkId) {
-    return new Promise(resolve => {
-        $.ajax({
-            url: API_URL + "/" + bookmarkId,
-            success: bookmark => { resolve(bookmark); },
-            error: () => { resolve(null); }
+    }
+    static async Save(bookmark, create = true) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL(),
+                type: create ? "POST" : "PUT",
+                contentType: 'application/json',
+                data: JSON.stringify(bookmark),
+                success: (/*data*/) => { resolve(true); },
+                error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
+            });
         });
-    });
-}
-
-function API_SaveBookmark(bookmark, create) {
-    return new Promise(resolve => {
-        $.ajax({
-            url: API_URL,
-            type: create ? "POST" : "PUT",
-            contentType: 'application/json',
-            data: JSON.stringify(bookmark),
-            success: (/*data*/) => { resolve(true); },
-            error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
+    }
+    static async Delete(id) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: this.API_URL() + "/" + id,
+                type: "DELETE",
+                success: () => { resolve(true); },
+                error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
+            });
         });
-    });
-}
-
-function API_DeleteBookmark(id) {
-    return new Promise(resolve => {
-        $.ajax({
-            url: API_URL + "/" + id,
-            type: "DELETE",
-            success: () => { resolve(true); },
-            error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
-        });
-    });
-}
-
-function API_GetBookmarkCategories(categorie) {
-    return new Promise(resolve => {
-        $.ajax({
-            url: API_URL + "/" + categorie,
-            success: bookmark => { resolve(bookmark); },
-            error: (xhr) => { console.log(xhr); resolve(null); }
-        })
-    })
+    }
 }
