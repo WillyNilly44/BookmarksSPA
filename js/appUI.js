@@ -57,11 +57,11 @@ async function renderBookmarks() {
     eraseContent();
     if (bookmarks !== null) {
         bookmarks.forEach(bookmark => {
-            if(filterCat != ''&& bookmark.Catégorie == selectedcat)
+            if(selectedcat != ''&& bookmark.Catégorie == selectedcat)
             {
                 $("#content").append(renderBookmark(bookmark));
             }
-            else if(filterCat == '')
+            else if(selectedcat == '')
             {
                 $("#content").append(renderBookmark(bookmark))
             }
